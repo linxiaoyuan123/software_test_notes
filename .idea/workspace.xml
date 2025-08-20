@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4a288816-a12f-4933-b1bd-18b17036e776" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/01_test01_hello_world.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/02_注释.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/03_变量的定义.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/04_查看变量类型.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/05_标识符命名规则和风格.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/06_常见数据类型及数据类型查看.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/07_input程序输入方式.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/08_if判断.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/09_格式化输出format和f.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/10_输入输出案例及类型转换函数.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/11_算术、比较运算符及案例.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/12_逻辑运算符.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/13_if_else基本用法.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/14_if语句与and结合.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/15_if语句与or结合.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/16_if语句与not结合.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/17_elif.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/18_if的嵌套.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/19_while循环和赋值运算符.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/20_while循环与if语句结合.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python基础/Code/21_for循环.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="31RREoDUB2FiLM7CgdNJDTIOIJG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/study/软件测试",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.90" />
+        <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="4a288816-a12f-4933-b1bd-18b17036e776" name="更改" comment="" />
+      <created>1755484789540</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1755484789540</updated>
+      <workItem from="1755484790694" duration="33000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
