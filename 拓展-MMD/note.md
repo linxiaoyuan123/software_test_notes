@@ -1,6 +1,4 @@
-> 发布主页：https://v.douyin.com/T89j9iOSCdI/ 9@2.com :9pm
->
-> 目前没什么技术含量，主要是喜欢某些角色，所以套套角色
+# Blender
 
 ### 1.快捷键：
 
@@ -64,4 +62,10 @@ K完导出动作，再重新导入可以预留边距
 容器：QuickTime
 视频编码：PNG
 ```
+
+
+
+# mikumikudance
+
+### 1.导入视频k帧插件MMBG
 
