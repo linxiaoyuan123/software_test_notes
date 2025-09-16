@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "c498f26d-84af-49f0-8294-ff774f5371d1",
+		"name": "参数化用例集",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48446116",
+		"_collection_link": "https://linxiaoyuan-ljb-5111139.postman.co/workspace/e01a27a9-b921-4464-8538-5edf598402db/collection/48446116-c498f26d-84af-49f0-8294-ff774f5371d1?action=share&source=collection_link&creator=48446116"
+	},
+	"item": [
+		{
+			"name": "参数化案例-按手机号找运营商",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"断言归属地\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.sp).to.eql(data.file_sp);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://cx.shouji.360.cn/phonearea.php?number={{file_mobile}}",
+					"protocol": "http",
+					"host": [
+						"cx",
+						"shouji",
+						"360",
+						"cn"
+					],
+					"path": [
+						"phonearea.php"
+					],
+					"query": [
+						{
+							"key": "number",
+							"value": "{{file_mobile}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
