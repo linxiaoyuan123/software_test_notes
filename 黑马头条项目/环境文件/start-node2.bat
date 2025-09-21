@@ -1,0 +1,1 @@
+java -jar selenium-server-<version>.jar node --port 6666
