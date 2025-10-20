@@ -369,9 +369,7 @@ t2.start()
 
 #### 1）自媒体登录、发布自动化测试用例编写
 
-![QQ_1758270439767](.\assets\note\QQ_1758270439767.png)
-
-
+![QQ_1760431020717](.\assets\note\QQ_1760431020717.png)
 
 ### 6、项目目录搭建（结构）- 登录
 
@@ -391,6 +389,12 @@ t2.start()
 
 
 #### 1）base结构(装公共方法的目录)
+
+> ==cls==和==self==的区别：
+>
+> -  cls 代表**类**， self 代表**实例对象**。
+>
+> pass是占位符。
 
 代码：
 
@@ -798,9 +802,6 @@ class GetDriver:
 
 ![QQ_1758438408854](.\assets\note\QQ_1758438408854.png)
 
-- ==cls==和==self==的区别：
-  -  cls 代表**类**， self 代表**实例对象**。
-
 
 
 ##### （2）read_yaml.py
@@ -1064,9 +1065,9 @@ mp_login001:
 
 
 
-### 7 、自动化测试用例 - 发布文章
+### 7 、自媒体发布文章用例
 
-![QQ_1758270439767](.\assets\note\QQ_1758270439767.png)
+![QQ_1760431020717](.\assets\note\QQ_1760431020717-1760431248160-5.png)
 
 ```
 和黑马20年的视频有所不同的是:
@@ -1094,3 +1095,879 @@ mp_login001:
 		c)回到默认目录(跳出当前iframe)
 		
 ```
+
+
+
+#### 1）base查找频道方法封装
+
+- web_base.py
+
+```python
+from time import sleep
+from selenium.webdriver.common.by import By
+from base.base import Base
+from tools.get_log import GetLog
+
+log = GetLog.get_logger()
+
+#继承Base
+class WebBase(Base):
+    """以下为web项目专属方法"""
+    #根据显示文本点击指定元素
+    def web_base_click_element(self, placeholder_text, click_text):
+        # 1、点击父选框
+        loc = By.CSS_SELECTOR, "[placeholder= '{}']".format(placeholder_text)
+        log.info(f"正在对：{loc} 元素执行点击操作！")
+        self.base_click(loc)
+        # 2、暂停
+        sleep(1)
+        # 3、点击包含显示文本的元素
+        loc = By.XPATH, "//*[contains(text(),'{}')]".format(click_text)
+        log.info(f"正在对：{loc} 元素执行点击操作！")
+        self.base_click(loc)
+```
+
+##### a）回顾xpath定位
+
+###### 23_xpath定位.py
+
+```python
+"""
+技术点：xpath定位
+策略：
+①路径定位：绝对路径(/html/xxx   注意：不推荐)  检查==》复制==》复制完整xpath
+         相对路径(//* xxx)                检查==》复制==》复制xpath
+②文本定位:
+        相等 //*[text()='文字']
+        包含 //*[contains(text(),'文字')]
+场景：当页面元素没有基本信息时。可以继续页面显示文字通过xpath进行定位
+
+"""
+import time
+
+#需求：xpath定位实现冷链监控系统自动登录
+# 说明：
+#项目地址:http://120.26.52.119/
+# 账号:admin
+#密码:HM_2025test
+#
+# 导包
+from selenium.webdriver.common.by import By
+
+from tools.chromeDriver import get_driver, quit_driver
+# 打开页面
+driver = get_driver("http://120.26.52.119/")
+# 页面操作
+# 输入账号
+driver.find_element(By.XPATH, '//*[@id="app"]/div/form/div[2]/div[1]/div/div[1]/input').send_keys("admin")
+# 输入密码
+driver.find_element(By.XPATH,'//*[@id="app"]/div/form/div[2]/div[2]/div/div[1]/input').send_keys("HM_2025_test")
+#点击登录
+driver.find_element(By.XPATH, '//*[@id="app"]/div/form/div[2]/button').click()
+
+
+#实时展示监控页面信息
+#点击监控管理
+#//*[text()='监控管理'］
+driver.find_element(By.XPATH, "//*[text()='监控管理']").click()
+time.sleep(1)
+#点击实时报警
+#//*[contains(text(),'实时报警')]
+driver.find_element(By.XPATH, "//*[contains(text(),'实时报警')]").click()
+time.sleep(2)
+
+# 退出浏览器
+quit_driver(driver)
+```
+
+###### 24 _xpath属性定位.py
+
+```python
+"""
+属性定位
+    概念：利用元素的属性来进行定位。
+    示例：
+        //input[@type='submit']
+        //*[@value='提交']
+
+"""
+
+
+#打开页面
+#需求：打开注册页面。完成以下操作：
+#1)。利用元素的属性信息精准定位用户名输入框，并输入：admin
+# 项目地址:http://121.43.169.97:8848/pageA.html
+
+# 导包
+import time
+from selenium.webdriver.common.by import By
+from tools.chromeDriver import get_driver, quit_driver
+# 打开页面
+driver = get_driver("http://121.43.169.97:8848/pageA.html")
+# 页面操作
+# xpath属性定位
+driver.find_element(By.XPATH, "//*[@id='userA']").send_keys("admin")
+time.sleep(1)
+
+# xpath属性与逻辑结合
+driver.find_element(By.XPATH, "//*[@name='user' and @class='login']").send_keys("admin123")
+time.sleep(1)
+
+# xpath属性与层级结合
+driver.find_element(By.XPATH, "//*[ @id='p1']/input[@name='user']").clear()
+time.sleep(1)
+driver.find_element(By.XPATH, "//*[ @id='p1']/input[@name='user']").send_keys("admin666")
+
+# 退出浏览器
+quit_driver(driver)
+```
+
+![QQ_1758887711694](.\assets\note\QQ_1758887711694.png)
+
+
+
+#### 2）依赖登录方法实现，发布文章页面操作
+
+##### a）依赖登录方法实现，Base改为WebBase
+
+- page/page_mp_login.py
+
+```python
+from time import sleep
+import page
+from base.web_base import WebBase
+from tools.get_log import GetLog
+
+log = GetLog.get_logger()
+
+#修改继承类
+class PageMpLogin(WebBase):
+    # 输入用户名
+    def page_input_username(self,username):
+        # 调用父类中输入方法
+        self.base_input(page.mp_username,username)
+
+    # 输入密码
+    def page_input_password(self,password):
+        # 调用父类中输入方法
+        self.base_input(page.mp_password,password)
+
+    # 点击登录按钮
+    def page_click_login_btn(self):
+        # 解决电脑浏览器加载过快，而服务器的登录按钮还没显示就已经完成脚本任务导致的报错
+        sleep(1)
+        # 调用父类中点击方法
+        self.base_click(page.mp_login_bt)
+
+    # 获取名称封装
+    def page_get_nickname(self):
+        # 调用父类获取文本方法
+        return self.base_get_text(page.mp_nickname)
+
+    # 组合业务方法 -> 测试脚本层调用
+    def page_mp_login(self, username, password):
+        log.info(f"正在调用自媒体登录业务方法，用户名：{username} 密码：{password}")
+        """提示：调用相同页面操作步骤，跨页面暂时不考虑"""
+        self.page_input_username(username)
+        self.page_input_password(password)
+        self.page_click_login_btn()
+
+    # 新加的
+    # 组合业务方法 -> 发布文章依赖使用
+    def page_mp_login_success(self, username, password):
+        log.info(f"正在调用自媒体登录业务方法，用户名：{username} 密码：{password}")
+        """提示：调用相同页面操作步骤，跨页面暂时不考虑"""
+        self.page_input_username(username)
+        self.page_input_password(password)
+        self.page_click_login_btn()
+```
+
+##### b）发布文章页面操作，注意iframe切换
+
+- page/page_mp_article.py
+
+```python
+from base.web_base import WebBase
+
+
+class PageMpArticle(WebBase):
+    # 点击 发布文章
+    def page_click_publish_article(self):
+        pass
+
+    # 输入 标题
+    def page_input_title(self):
+        pass
+
+    # 输入 内容
+    def page_input_content(self):
+        """
+        如果有iframe结构的话
+        1、切换iframe
+
+        3、回到默认目录
+        """
+        # 2、输入内容
+
+
+        pass
+
+    # 输入 标签
+    def page_input_tag(self):
+        pass
+
+    # 选择 频道
+    def page_click_channel(self):
+        # 调用WebBase封装方法
+        pass
+
+    # 选择 定时发布-即刻
+    def page_click_publish_timing(self):
+        pass
+
+    # 选择封面
+    def page_click_cover(self):
+        pass
+
+    # 点击 发表按钮
+    def page_click_submit(self):
+        pass
+
+    # 获取 发表提示信息
+    def page_get_info(self):
+        pass
+
+    # 组合发布文章业务方法
+    def page_mp_article(self):
+        pass
+```
+
+
+
+#### 3）页面元素配置信息整理
+
+- page/init.py
+
+```python
+from selenium.webdriver.common.by import By
+
+"""以下数据为自媒体、后台管理url"""
+#自媒体url
+url_mp = "https://heima-wemedia-java.itheima.net/#/login"
+#后台管理url
+url_mis = "https://heima-admin-java.itheima.net/#/login"
+
+"""以下为自媒体模块配置数据,元组或列表格式"""
+
+# 用户名
+mp_username = (By.CSS_SELECTOR, "[type = 'text']")
+# 密码
+mp_password = (By.CSS_SELECTOR, "[type = 'password']")
+# 登录按钮
+mp_login_bt = (By.CSS_SELECTOR, ".el-button")
+# 名称
+mp_nickname = (By.CSS_SELECTOR, ".user-name")
+
+# 发布文章 XPATH文本包含语法
+# 另一种 等于语法 //span[text()='发布文章']
+mp_publish_article = By.XPATH, "//*[contains(text(),'发布文章')]"
+# 文章标题 能用CSS，就不要用XPATH
+mp_title = By.CSS_SELECTOR, "[placeholder='请在这里输入标题']"
+"""
+若有iframe页面切换的情况下，iframe
+mp_iframe = By.CSS_SELECTOR, ".iframe"
+"""
+# 编辑内容按钮
+mp_content_bt = By.CSS_SELECTOR, "[title='编辑内容']"
+# 文章内容 正常来说，定位到body，不要定位到段落p标签，这里网站只有个div写内容，所以定位到div
+mp_content = By.CSS_SELECTOR, ".el-textarea__inner"
+# 文章标签
+mp_tag = By.CSS_SELECTOR, "[placeholder='请输入标签']"
+# 文章定时发布时间
+mp_time = By.CSS_SELECTOR, "[placeholder='请选择日期时间']"
+# 定时发布时间-此刻
+mp_time_now = By.CSS_SELECTOR, ".el-button--text"
+# 封面
+mp_cover = By.XPATH, "//*[text()='自动']/.."
+# 提交审核
+mp_submit = By.XPATH, "//*[contains(text(),'提交审核')]/.."
+# 结果
+mp_result = By.XPATH, "//*[contains(text(),'新增文章成功')]"
+
+```
+
+> 1、切换iframe框架，使用元素切换（未加载时激活显示等待）
+> 2、输入文章元素定位到body
+
+
+
+#### 4）页面结构方法实现，统一入口类
+
+##### a）页面结构方法实现
+
+- page_mp_article.py
+
+```python
+from time import sleep
+from base.web_base import WebBase
+import page
+from page import mp_content_bt
+
+
+class PageMpArticle(WebBase):
+    # 点击 发布文章
+    def page_click_publish_article(self):
+        sleep(1)
+        self.base_click(page.mp_publish_article)
+
+    # 输入 标题
+    def page_input_title(self, title):
+        sleep(2)
+        self.base_input(page.mp_title, title)
+
+
+    # 输入 内容
+    def page_input_content(self, content):
+        """
+        如果有iframe结构的话
+        1、切换iframe
+        iframe = self.base_find(page.mp_iframe)
+        self.driver.switch_to.frame(iframe)
+        2、输入内容
+        self.base_input(page.mp_content, content)
+        3、回到默认目录
+        self.driver.switch_to.default_content()
+        """
+
+        """
+        黑马2025年头条的输入内容页面有点特殊，无法直接输入，
+            需要先将鼠标悬停在输入框上，然后点了编辑内容按钮，弹出框才能输入
+            但视频里面是没这个情况的，在这种项目结构里面我暂时不知道怎么解决
+            所以把输入内容注释掉了
+        """
+        # 1、点击编辑内容按钮
+        self.base_click(mp_content_bt)
+        # 2、暂停
+        sleep(1)
+        # 3、输入内容
+        self.base_input(page.mp_content, content)
+
+    # 输入 标签
+    def page_input_tag(self, tag):
+        self.base_input(page.mp_tag, tag)
+        sleep(1)
+
+    # 选择 频道
+    def page_click_channel(self):
+        # 调用WebBase封装方法
+        self.web_base_click_element(placeholder_text="请选择频道",click_text="大数据")
+
+    # 选择 定时发布-即刻
+    def page_click_publish_timing(self):
+        self.web_base_click_element(placeholder_text="请选择日期时间", click_text="此刻")
+
+    # 选择封面
+    def page_click_cover(self):
+        self.base_click(page.mp_cover)
+
+    # 点击 发表按钮
+    def page_click_submit(self):
+        self.base_click(page.mp_submit)
+
+    # 获取 发表提示信息
+    def page_get_info(self):
+        return self.base_get_text(page.mp_result)
+
+    # 组合发布文章业务方法
+    def page_mp_article(self,title,tag):
+        self.page_click_publish_article()
+        self.page_input_title(title)
+        #self.page_input_content(content)
+        self.page_input_tag(tag)
+        self.page_click_channel()
+        self.page_click_publish_timing()
+        self.page_click_cover()
+        self.page_click_submit()
+```
+
+
+
+##### b）统一入口类
+
+- page_in.py
+
+```python
+from page.page_mp_article import PageMpArticle
+from page.page_mp_login import PageMpLogin
+
+
+class PageIn:
+    def __init__(self, driver):
+        self.driver = driver
+
+    # 获取PageMpLogin对象
+    def page_get_PageMpLogin(self):
+        return PageMpLogin(self.driver)
+
+    # 获取PageMpArticle对象
+    def page_get_PageMpArticle(self):
+        return PageMpArticle(self.driver)
+```
+
+
+
+#### 5）测试脚本实现，初次运行bug调试
+
+- scripts/test02_mp_article.py
+
+```python
+import pytest
+import page
+from page.page_in import PageIn
+from tools.get_driver import GetDriver
+from tools.get_log import GetLog
+from tools.read_yaml import read_yaml
+
+log = GetLog.get_logger()
+
+class TestMpArticle:
+    #1、初始化
+    def setup_class(self):
+        """
+        1、要获取driver，原因：获取统一入口类的时候必须传入driver
+        2、统一入口类里面是继承了base的？
+        3、要统一入口类，原因：PageMpLogin和PageMpArticle两个对象的获取在统一入口类PageIn中
+        """
+        # 1、获取driver
+        driver = GetDriver.get_web_driver(page.url_mp)
+        # 2、获取统一入口类对象
+        self.page_in = PageIn(driver)
+        # 3、获取PageMpLogin对象并调用成功登录的依赖方法
+        self.page_in.page_get_PageMpLogin().page_mp_login_success('demo','842itheima.CN032@.20251013')
+        # 4、获取PageMpArticle页面对象
+        self.article = self.page_in.page_get_PageMpArticle()
+
+
+    # 2、结束
+    def teardown_class(self):
+        # 关闭driver
+        GetDriver.quit_web_driver()
+
+    # 3、测试发布文章方法
+    @pytest.mark.parametrize("title,tag,expect", read_yaml("mp_article.yaml"))
+    def test_mp_article(self,title,tag,expect):
+        # 调用发布文章业务方法
+        self.article.page_mp_article(title,tag)
+        try:
+            # 查看断言信息
+            assert expect == self.article.page_get_info()
+        except Exception as e:
+        # 使用所有的基类异常，重命名错误信息为e
+            #日志(有三个地方需要标注，base，page，scripts)
+            log.eroor(e)
+            #截图
+            self.article.base_get_img()
+            #抛异常
+            raise
+```
+
+
+
+
+
+### 8、后台管理登录用例
+
+#### 1）业务分析、登录按钮设置
+
+![QQ_1760431396799](.\assets\note\QQ_1760431396799.png)
+
+![老版登录页面](.\assets\note\QQ_1760432039377.png)
+
+![新版登录页面](.\assets\note\QQ_1760432122279.png)
+
+```
+1)后台管理https://heima-admin-java.itheima.net/#/login
+2)登录账号：demo
+3)登录密码：623itheima.CN032@.20251014
+
+4)js设置disabled属性失效,用cookie也可以解决，
+(这个是老版页面有的一个登录问题，需要通过验证码，验证通过后会将登录按钮的disabled属性设为false
+这个时候我们才可以点击登录，而为了跳过这个过程，我们可以直接用JS将语句修改为false)
+js 代码:document.getElementById("inp1").disabled=false
+
+二、业务：
+1)输入账号
+2)输入密码
+3)点击登录按钮
+4)获取昵称
+
+分析思路：
+	先分析page页面需要用的base公共方法有没有，如果没有则补充
+	然后搭建后台管理登录的page页面结构搭建
+```
+
+
+
+#### 2）page结构搭建、统一入口类管理page对象
+
+##### a）page结构搭建
+
+- page/page_mis_login.py
+
+```python
+from base.web_base import WebBase
+
+
+class PageMisLogin(WebBase):
+    # 1、输入用户名
+    def page_input_username(self):
+        pass
+
+    # 2、输入密码
+    def page_input_password(self):
+        pass
+
+    # 3、点击登录按钮
+    def page_click_login_btn(self):
+        pass
+
+    # 4、获取名称封装
+    def page_get_nickname(self):
+        pass
+
+    # 5、组合后台管理登录业务方法
+    def page_mis_login(self):
+        pass
+```
+
+
+
+##### b）统一入口管理page对象
+
+- page/page_in.py
+
+```python
+from page.page_mis_login import PageMisLogin
+from page.page_mp_article import PageMpArticle
+from page.page_mp_login import PageMpLogin
+
+
+class PageIn:
+    def __init__(self, driver):
+        self.driver = driver
+
+    # 获取PageMpLogin对象
+    def page_get_PageMpLogin(self):
+        return PageMpLogin(self.driver)
+
+    # 获取PageMpArticle对象
+    def page_get_PageMpArticle(self):
+        return PageMpArticle(self.driver)
+
+    # 获取PageMisLogin对象
+    def page_get_PageMisLogin(self):
+        return PageMisLogin(self.driver)
+```
+
+
+
+#### 3）page页面元素配置信息整理、页面方法具体实现
+
+##### a）page页面元素配置信息整理
+
+- page/_init__.py
+
+```python
+from selenium.webdriver.common.by import By
+
+"""以下数据为自媒体、后台管理url"""
+#自媒体url
+url_mp = "https://heima-wemedia-java.itheima.net/#/login"
+#后台管理url
+url_mis = "https://heima-admin-java.itheima.net/#/login"
+
+"""以下为自媒体模块配置数据,元组或列表格式"""
+
+# 用户名
+mp_username = (By.CSS_SELECTOR, "[type = 'text']")
+# 密码
+mp_password = (By.CSS_SELECTOR, "[type = 'password']")
+# 登录按钮
+mp_login_bt = (By.CSS_SELECTOR, ".el-button")
+# 名称
+mp_nickname = (By.CSS_SELECTOR, ".user-name")
+
+# 发布文章 XPATH文本包含语法
+# 另一种 等于语法 //span[text()='发布文章']
+mp_publish_article = By.XPATH, "//*[contains(text(),'发布文章')]"
+# 文章标题 能用CSS，就不要用XPATH
+mp_title = By.CSS_SELECTOR, "[placeholder='请在这里输入标题']"
+"""
+若有iframe页面切换的情况下，iframe
+mp_iframe = By.CSS_SELECTOR, ".iframe"
+"""
+# 编辑内容按钮
+mp_content_bt = By.CSS_SELECTOR, "[title='编辑内容']"
+# 文章内容 正常来说，定位到body，不要定位到段落p标签，这里网站只有个div写内容，所以定位到div
+mp_content = By.CSS_SELECTOR, ".el-textarea__inner"
+# 文章标签
+mp_tag = By.CSS_SELECTOR, "[placeholder='请输入标签']"
+# 文章定时发布时间
+mp_time = By.CSS_SELECTOR, "[placeholder='请选择日期时间']"
+# 定时发布时间-此刻
+mp_time_now = By.CSS_SELECTOR, ".el-button--text"
+# 封面
+mp_cover = By.XPATH, "//*[text()='自动']/.."
+# 提交审核
+mp_submit = By.XPATH, "//*[contains(text(),'提交审核')]/.."
+# 结果
+mp_result = By.XPATH, "//*[contains(text(),'新增文章成功')]"
+
+
+"""以下配置信息为后台管理系统"""
+# 用户名
+mis_username = By.CSS_SELECTOR, "[type='text']"
+# 密码
+mis_pwd = By.CSS_SELECTOR, "[type='password']"
+# 登录按钮
+mis_login_btn = By.CSS_SELECTOR, ".el-button"
+# 昵称
+mis_nickname = By.CSS_SELECTOR, ".user-name"
+```
+
+
+
+##### b）页面方法具体实现
+
+- page/page_mis_login.py
+
+```python
+import page
+from base.web_base import WebBase
+
+
+class PageMisLogin(WebBase):
+    # 1、输入用户名
+    def page_input_username(self,username):
+        self.base_input(page.mis_username,username)
+
+    # 2、输入密码
+    def page_input_password(self,pwd):
+        self.base_input(page.mis_pwd,pwd)
+
+    # 3、点击登录按钮
+    def page_click_login_btn(self):
+        """
+        如果登录按钮是有个disabled属性在控制按钮的可用性的情况下，
+            且需验证通过才会将disabled设置为false，然后按钮为可用。
+                这种情况可用JS直接修改属性
+        #1、处理JS
+        js = "document.getElementById('inpl').disabled=false"
+        self.driver.execute_script(js)
+        """
+        #2、调用点击操作
+        self.base_click(page.mis_login_btn)
+
+    # 4、获取昵称封装
+    def page_get_nickname(self):
+        return self.base_get_text(page.mis_nickname)
+
+    # 5、组合后台管理登录业务方法
+    def page_mis_login(self,username,pwd):
+        self.page_input_username(username)
+        self.page_input_password(pwd)
+        self.page_click_login_btn()
+```
+
+
+
+#### 4）scripts结构搭建
+
+- scripts/test03_mis_login.py
+
+```python
+import page
+from page.page_in import PageIn
+from tools.get_driver import GetDriver
+
+
+class TestMisLogin:
+    # 1、初始化
+    def setup_class(self):
+        # 1、获取driver
+        driver = GetDriver.get_web_driver(page.url_mis)
+        # 2、通过统一入口类对象获取PageMisLogin对象
+        self.mis = PageIn(driver).page_get_PageMisLogin()
+
+    # 2、结束
+    def teardown_class(self):
+        # 关闭driver
+        GetDriver.quit_web_driver()
+
+    # 3、登录测试业务方法
+    def test_mis_login(self,username="demo",pwd="623itheima.CN032@.20251017"):
+        # 1、调用登录业务方法
+        self.mis.page_mis_login(username,pwd)
+        # 2、调式断言信息
+        print("获取的昵称为：", self.mis.page_get_nickname())
+```
+
+
+
+#### 5）断言及捕获处理、参数化
+
+##### a）断言及捕获处理
+
+- page/page_mis_login.py
+
+```python
+import page
+from base.web_base import WebBase
+from tools.get_log import GetLog
+
+log = GetLog.get_logger()
+
+class PageMisLogin(WebBase):
+    # 1、输入用户名
+    def page_input_username(self,username):
+        self.base_input(page.mis_username,username)
+
+    # 2、输入密码
+    def page_input_password(self,pwd):
+        self.base_input(page.mis_pwd,pwd)
+
+    # 3、点击登录按钮
+    def page_click_login_btn(self):
+        """
+        如果登录按钮是有个disabled属性在控制按钮的可用性的情况下，
+            且需验证通过才会将disabled设置为false，然后按钮为可用。
+                这种情况可用JS直接修改属性
+        #1、处理JS
+        js = "document.getElementById('inpl').disabled=false"
+        self.driver.execute_script(js)
+        """
+        #2、调用点击操作
+        self.base_click(page.mis_login_btn)
+
+    # 4、获取昵称封装
+    def page_get_nickname(self):
+        return self.base_get_text(page.mis_nickname)
+
+    # 5、组合后台管理登录业务方法
+    def page_mis_login(self,username,pwd):
+        log.info("正在调用后台管理系统登录业务方法，用户名：{} 密码：{}".format(username, pwd))
+        self.page_input_username(username)
+        self.page_input_password(pwd)
+        self.page_click_login_btn()
+```
+
+- scripts/test03_mis_login.py
+
+```python
+import page
+from page.page_in import PageIn
+from tools.get_driver import GetDriver
+from tools.get_log import GetLog
+
+log = GetLog.get_logger()
+
+class TestMisLogin:
+    # 1、初始化
+    def setup_class(self):
+        # 1、获取driver
+        driver = GetDriver.get_web_driver(page.url_mis)
+        # 2、通过统一入口类对象获取PageMisLogin对象
+        self.mis = PageIn(driver).page_get_PageMisLogin()
+
+    # 2、结束
+    def teardown_class(self):
+        # 关闭driver
+        GetDriver.quit_web_driver()
+
+    # 3、登录测试业务方法
+    def test_mis_login(self,username="demo",pwd="623itheima.CN032@.20251017",expect="demo"):
+        # 1、调用登录业务方法
+        self.mis.page_mis_login(username,pwd)
+        try:
+            # 2、调式断言信息
+            assert expect in self.mis.page_get_nickname()
+        except Exception as e:
+        # 使用所有的基类异常，重命名错误信息为e
+            #日志(有三个地方需要标注，base，page，scripts，但后台管理无新增base方法，所以无需标注base)
+            log.eroor(e)
+            #截图
+            self.mis.base_get_img()
+            #抛异常
+            raise
+```
+
+
+
+##### b）参数化
+
+- data/mis_login.yaml
+
+```
+mis_login001:
+  username: "demo"
+  pwd: "623itheima.CN032@.20251017"
+  expect: "demo"
+```
+
+- scripts/test03_mis_login.py
+
+```python
+import pytest
+import page
+from page.page_in import PageIn
+from tools.get_driver import GetDriver
+from tools.get_log import GetLog
+from tools.read_yaml import read_yaml
+
+log = GetLog.get_logger()
+
+class TestMisLogin:
+    # 1、初始化
+    def setup_class(self):
+        # 1、获取driver
+        driver = GetDriver.get_web_driver(page.url_mis)
+        # 2、通过统一入口类对象获取PageMisLogin对象
+        self.mis = PageIn(driver).page_get_PageMisLogin()
+
+    # 2、结束
+    def teardown_class(self):
+        # 关闭driver
+        GetDriver.quit_web_driver()
+
+    # 3、登录测试业务方法
+    @pytest.mark.parametrize("username,pwd,expect",read_yaml("mis_login.yaml"))
+    def test_mis_login(self,username,pwd,expect):
+        # 1、调用登录业务方法
+        self.mis.page_mis_login(username,pwd)
+        try:
+            # 2、调式断言信息
+            assert expect in self.mis.page_get_nickname()
+        except Exception as e:
+        # 使用所有的基类异常，重命名错误信息为e
+            #日志(有三个地方需要标注，base，page，scripts，但后台管理无新增base方法，所以无需标注base)
+            log.eroor(e)
+            #截图
+            self.mis.base_get_img()
+            #抛异常
+            raise
+
+```
+
+
+
+### 9、后台管理审核文章用例
+
+![QQ_1760431396799](.\assets\note\QQ_1760431396799.png)
+
+#### 1）page页面结构搭建，统一入口类管理页面对象
+
+#### a）page页面结构搭建
+
+
+
+#### b）统一入口类管理页面对象
