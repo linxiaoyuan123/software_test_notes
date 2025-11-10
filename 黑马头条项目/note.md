@@ -1964,10 +1964,58 @@ class TestMisLogin:
 
 ![QQ_1760431396799](.\assets\note\QQ_1760431396799.png)
 
-#### 1）page页面结构搭建，统一入口类管理页面对象
+> 基本方法同后台登录用例差不多，详细看项目代码
+>
+> 注意：
+>
+> ​	1、定位元素有多个时，默认返回第一个元素
 
-#### a）page页面结构搭建
+#### 1）base/web_base.py
 
+##### a）修改了根据显示文本点击指定元素的参数
 
+##### b）新封装了判断页面是否包含指定元素方法
 
-#### b）统一入口类管理页面对象
+```python
+from time import sleep
+from selenium.webdriver.common.by import By
+from base.base import Base
+from tools.get_log import GetLog
+
+log = GetLog.get_logger()
+
+#继承Base
+class WebBase(Base):
+    """以下为web项目专属方法"""
+    # 根据显示文本点击指定元素
+    def web_base_click_element(self, placeholder_text, label, click_text):
+        # 1、点击父选框
+        loc = By.CSS_SELECTOR, "[placeholder= '{}']".format(placeholder_text)
+        log.info(f"正在对：{loc} 元素执行点击操作！")
+        self.base_click(loc)
+        # 2、暂停
+        sleep(1)
+        # 3、点击包含显示文本的元素
+        loc = By.XPATH, "//{}[contains(text(),'{}')]".format(label,click_text)
+        log.info(f"正在对：{loc} 元素执行点击操作！")
+        self.base_click(loc)
+
+    # 判断页面是否包含指定元素
+    def web_base_is_exist(self,text):
+        # 1、组装元素配置信息
+        loc = By.XPATH, "//*[text()='{}']".format(text)
+        # 2、找元素
+        try:
+            # 1、找元素 修改查找元素时间 3
+            self.base_find(loc,timeout=3)
+            # 2、输出找到信息
+            print("找到：{} 元素".format(loc))
+            # 3、返回 True
+            return True
+        except:
+            # 1、输出未找到信息
+            print("没有找到：{} 元素！".format(loc))
+            # 2、返回False
+            return False
+
+```
